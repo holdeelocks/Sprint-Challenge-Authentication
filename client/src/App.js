@@ -34,6 +34,13 @@ class App extends Component {
 		jokes: []
 	};
 
+	componentDidMount() {
+		const token = localStorage.getItem('jwtToken');
+		if (token) {
+			this.getJokes();
+		}
+	}
+
 	getJokes = async () => {
 		try {
 			const accessToken = localStorage.getItem('jwtToken');
