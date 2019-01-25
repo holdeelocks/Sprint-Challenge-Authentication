@@ -25,16 +25,30 @@ class LoginOrRegister extends React.Component {
 
 	onSubmit = async e => {
 		e.preventDefault();
+		const { register } = this.props;
+		try {
+			const response = await axios.post(`/api/${register ? 'register' : 'login'}`, this.state, {
+				withCredentials: true
+			});
+			if (!response.data.token) return alert('Username or password incorrect');
+
+			localStorage.setItem('jwtToken', response.data.token);
+
+			this.props.getJokes();
+			this.props.history.push('/jokes');
+		} catch (err) {
+			console.log(err);
+		}
 	};
 
 	render() {
-		const { email, password, departments } = this.state;
-		const { signup, modal } = this.props;
+		const { email, password } = this.state;
+		const { register, modal } = this.props;
 
 		return (
 			<div>
 				<Modal isOpen={modal}>
-					<ModalHeader>{register ? 'Sign Up' : 'Login'}</ModalHeader>
+					<ModalHeader>{register ? 'Register' : 'Login'}</ModalHeader>
 					<ModalBody>
 						<Form className="form">
 							<Col>
